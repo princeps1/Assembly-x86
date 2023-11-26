@@ -1,0 +1,44 @@
+
+
+.386
+.model flat, c
+
+
+
+.data
+
+	mat dw 1,8,7,2,11,9,3,4,10 ;//IDE PLUS 2 JER JE TIP WORD
+	N dd 3 ;//DIMENZIJE MATRICE
+	suma dw ? ;//SUMA
+	
+.code
+
+	main proc
+
+	mov esi, 0;//ESI JE DRUGA DIMENZIJA,SADA SE ONA SPORIJE VRTI PA JE ZATO SPOLJA
+
+	P1:
+		mov ebx, 0;//EBX JE PRVA DIMENZIJA,SADA SE ONA BRZE VRTI PA JE ZATO UNUTRA
+		mov eax, 0;//PRAZNIM REGISTAR AX GDE SU DA SABIRAM ELEMENTE
+		mov ecx, N;//USLOV PREKIDA ZA UNUTRASNJU PETLJU,KADA ECX POSTANE 0
+		P2:
+
+			add ax, mat[ebx][esi];//AX+=MAT[EBX][ESI]
+
+			add ebx,N
+			add ebx,N
+			
+
+		loop P2
+		mov suma[esi], ax;//NA KRAJU SVAKE VRSTE SUMA KOJA SE NALAZI U AX CE PRECI U PROMENLJIVU suma
+		add esi,2
+
+		mov edx,N
+		add edx,N
+		cmp esi,edx
+	jb P1
+		ret
+
+
+	main endp
+	end main

@@ -1,0 +1,96 @@
+.386
+.model flat,c
+
+.data
+	MAT dd 6,2,3,1,5,4,4,8,1
+	N dd 3
+	SUMA dd ?
+	REZ dd ?
+
+.stack 4096
+
+.code
+	ZBIR proc
+		push ebp
+		mov ebp,esp
+		
+		push ecx
+		push eax
+		push edx
+		push ebx
+
+
+	;//////////
+		mov eax,[ebp+16];//	U EAX JE ADRESA VRSTE
+		mov ecx,[ebp+12];//U ECX BROJ ELEMENATA NIZA
+		
+
+		mov edx, 0;//U EDX CE BITI ZBIR
+
+
+		PETLJA:
+				mov ebx,[eax];//U EBX JE VREDNOST ELEMENTA
+			
+				add edx,ebx;//SABIRANJE ELEMENATA VRSTE
+
+
+				add eax, 4;//PRELAZAK NA SLEDECI ELEMENT
+		loop PETLJA
+
+		mov [ebp+8],edx;//STAVLJANJE ZBIRA U PROMENLJIVU SUMA
+			
+		pop ebx
+		pop edx
+		pop eax
+		pop ecx
+		pop ebp
+		ret 
+
+	ZBIR endp
+	
+
+
+
+	;////////////////////////
+
+
+	main proc
+		mov ecx,N;//U ECX BROJ ELEMENATA SVAKE VRSTE I KOLONE
+		mov ebx,0;//U EBX VRSTE MATRICE PROMENA
+		mov eax,1;//OVDE CE DA BUDE REZULTAT
+
+		GPETLJA:
+			lea esi,MAT[ebx];//U ESI ADRESA PRVOG ELEMENTA VRSTE MATRICE
+			push esi;//NA STEK ADRESA PRVOG ELEMENTA MATRICE
+			push N;//NA STEK BROJ ELEMENATA VRSTE
+			push SUMA;//NA STEK PROMENLJIVA U KOJOJ CE DA SE STAVI SUMA SVIH EL. VRSTE
+
+			call ZBIR
+			pop SUMA
+
+			mov edi,SUMA;//U EDI JE SUMA SVIH ELEMENATA VRSTE
+			sub edi, MAT[ebx];//OD SUME SVIH ELEMENATA ODUZIMAM VREDNOST PRVOG ELEMENTA
+
+			cmp MAT[ebx],edi;//DA LI JE PRVI EL. MANJI OD ZBIRA OSTALIH EL.
+			jg VECI_JE
+				mov ecx,1
+				jmp KRAJ
+			VECI_JE:
+				
+			
+			add eax,1
+			;//PRELAZAK NA SLEDECU VRSTU
+			add ebx,12
+			KRAJ:
+		loop GPETLJA
+		cmp eax,N
+		jne IMA
+			mov eax,0
+		IMA:
+
+		mov REZ,eax;//SMESTAM U PROMENLJIVU REZ REDNI BROJ VRSTE U KOJOJ SE NALAZI ELEMENT KOJI NIJE VECI OD ZBIRA OSTALIH EL.
+
+
+		ret
+	main endp
+	end main

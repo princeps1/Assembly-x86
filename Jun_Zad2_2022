@@ -1,0 +1,97 @@
+.386
+.model flat, c
+
+.data
+NIZ dd 1, 2, 3, 4, 5, 6, 0
+A dd 0
+B dd 0
+N dd 3;//DIMENZIJA MATRICE
+MAT dd ?
+
+
+.stack 4096
+
+.code
+
+KOPI proc
+;//CUVANJE KONTEKSTA
+push ebp
+mov ebp, esp
+push esi
+push edi
+push ebx
+
+
+mov esi, [ebp + 8];//ADRESA ELEMENTA NIZA
+mov edi, [ebp + 12];//ADRESA ELEMENTA MATRICE
+
+
+;//STAVI ELEMENT NIZA U MATRICU
+mov ebx, [esi]
+mov[edi], ebx
+
+
+pop ebx
+pop edi
+pop esi
+pop ebp
+ret
+KOPI endp
+
+
+main proc
+
+mov edi, 0;//ZA NIZ
+mov esi, 0;//ZA MATRICU
+
+
+
+PETLJA_SPOLJNA:
+
+mov ebx, 0;//PRVI ELEMENT KOLONE
+mov ecx, N;//GRANICA UNUTRASNJE PETLJE
+
+PETLJA_UNUTRASNJA:
+
+lea edx, MAT[ebx][esi];//ADRESA ELEMENTA MATRICE
+push edx
+lea eax, NIZ[edi];//ADRESA ELEMENTA NIZA
+push eax
+
+CALL KOPI;//POZIV PROCEDURE
+
+
+add ebx, 12;//PRELAZAK NA SLEDECI ELEMENT KOLONE
+add edi, 12;//PRELAZAK NA SLEDECI ELEMENT NIZA
+
+mov ebp, NIZ[edi];//U EBP SMESTEN ELEMENT NIZA,MOZE EBP
+cmp ebp, 0
+jne NIJE
+mov edi, esi
+NIJE :
+
+
+loop PETLJA_UNUTRASNJA
+
+;//GRANICA SPOLJASNJE PETLJE
+mov eax, N
+dec eax
+mov edx, 4
+mul edx
+;//GRANICA SPOLJASNJE PETLJE SE NALAZI U EAX
+
+
+add esi, 4
+mov edi, 0
+add edi, esi
+
+
+cmp esi, eax;//PROVERA DA LI SAM STIGO DO KRAJA MATRICE
+jbe PETLJA_SPOLJNA
+
+
+
+
+
+main endp
+end main

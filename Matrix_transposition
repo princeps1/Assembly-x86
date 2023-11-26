@@ -1,0 +1,54 @@
+
+
+.386
+.model flat, c
+
+.data
+	MAT1 dd 1,2,3,4,5,6
+	N dd 2
+	M dd 3
+	MAT2 dd ?
+
+.code
+	main proc
+		
+		mov ebx,0
+		mov edi,0
+		mov ecx, N;//BROJ ELEMENATA JE U ECX ZBOG LUPA ZA SPOLJNU PETLJU
+		SPOLJNA:
+			mov esi,0
+			mov edx,0
+
+			UNUTRASNJA:
+
+				mov ebp,MAT1[ebx][esi];//TRANSPONOVANJE ELEMENATA IZ MAT1 U MAT2
+				mov MAT2[edx][edi],ebp
+
+				mov eax,N;//POSTAVLJANJE GRANICE ZA UNUTRASNJU PETLJU
+				add eax,N;//+N
+				add eax,N;//+N
+				add eax,N;//+N
+
+				add esi, 4;//POVECAJ ESI
+				add edx, 4;//POVECAJ EDX
+
+				cmp esi, eax;//UPOREDJUJES ESI SA GRANICOM
+				
+			jbe UNUTRASNJA
+
+			add edi,M
+			add edi,M
+			add edi,M
+			add edi,M
+
+			add ebx,M
+			add ebx,M
+			add ebx,M
+			add ebx,M
+
+		loop SPOLJNA
+
+		ret
+
+	main endp
+	end main
